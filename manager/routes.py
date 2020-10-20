@@ -1,14 +1,46 @@
 from flask import render_template, redirect, url_for, flash, request
 from manager import app, db, bcrypt
-from manager.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from manager.forms import RegistrationForm, LoginForm, UpdateAccountForm, PassForm
 from manager.models import User, Password
 from flask_login import login_user, current_user, logout_user, login_required
+import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
 
+def divide_chunks(l, n): 
+      
+    # looping till length l 
+    for i in range(0, len(l), n):  
+        yield l[i:i + n] 
+
+
+def plot(string):
+    res = ''.join(format(ord(i), 'b') for i in string) 
+    res = res.zfill(100)
+    res = list(res)
+    res = list(divide_chunks(res, 10))
+    res = np.matrix(res)
+    G = nx.from_numpy_matrix(res)
+    fig = nx.draw(G)
+    return fig
+
+def BinaryToDecimal(binary): 
+    string = int(binary, 2) 
+    return string  
 
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    datas = Password.query.filter_by(user_id = current_user.id).all()
+    # for data in datas:
+    #     print(data.password)
+    #     str_data =' '
+    #     for i in range(0, len(data.password), 7):
+    #         temp_data = data.password[i:i + 7]
+    #         decimal_data = BinaryToDecimal(temp_data) 
+    #         data.password = str_data + chr(decimal_data)   
+    return render_template("home.html", datas=datas)
+
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -60,3 +92,18 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template('account.html', title='Account', form=form)
+
+@app.route("/password/new", methods=['GET', 'POST'])
+@login_required
+def new_pass():
+    form = PassForm()
+    if form.validate_on_submit():
+        flash('Your Password has been added!', 'success')
+        passwordb = form.password.data
+        passwordb = ''.join(format(ord(i), 'b') for i in passwordb)
+        data = Password(site=form.site.data, username=form.username.data, password=passwordb, user_id = current_user.id)
+        db.session.add(data)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('create_pass.html', title='New Password', form=form)
+
