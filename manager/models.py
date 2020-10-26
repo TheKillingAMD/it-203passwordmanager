@@ -20,12 +20,13 @@ class User(db.Model, UserMixin):
 
 class Password(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    site = db.Column(db.String(100), unique=True, nullable=False)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(1000), nullable=False)
+    site = db.Column(db.String(100),nullable=False)
+    username = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+    image_file = db.Column(db.String(20), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     users = db.relationship(User)
     
     def __repr__(self):
-        return f"Password('{self.site}','{self.username}')"
+        return f"Password('{self.site}','{self.username}','{self.image_file})"

@@ -6,6 +6,10 @@ from flask_login import login_user, current_user, logout_user, login_required
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import secrets
+import matplotlib
+import os
+matplotlib.use('Agg')
 
 def divide_chunks(l, n): 
       
@@ -14,7 +18,7 @@ def divide_chunks(l, n):
         yield l[i:i + n] 
 
 
-def plot(string):
+def plot(string, random_hex):
     res = ''.join(format(ord(i), 'b') for i in string) 
     res = res.zfill(100)
     res = list(res)
@@ -22,26 +26,28 @@ def plot(string):
     res = np.matrix(res)
     G = nx.from_numpy_matrix(res)
     fig = nx.draw(G)
-    return fig
+    plt.savefig(random_hex, dpi = 75)
+    return random_hex
 
-def BinaryToDecimal(binary): 
-    string = int(binary, 2) 
-    return string  
+
+
+# def BinaryToDecimal(binary): 
+#     string = int(binary, 2) 
+#     return string  
 
 @app.route("/")
 @app.route("/home")
 def home():
-    datas = Password.query.filter_by(user_id = current_user.id).all()
-    # for data in datas:
-    #     print(data.password)
-    #     str_data =' '
-    #     for i in range(0, len(data.password), 7):
-    #         temp_data = data.password[i:i + 7]
-    #         decimal_data = BinaryToDecimal(temp_data) 
-    #         data.password = str_data + chr(decimal_data)   
-    return render_template("home.html", datas=datas)
+    if current_user.is_authenticated:
+        datas = Password.query.filter_by(user_id = current_user.id).first()
+        image_file = datas.image_file + '.png'
+        return render_template("home.html", datas=datas, image_file=image_file)
+    else:
+        return redirect(url_for('login'))
 
-
+@app.route("/<int:image_id>")
+def image():
+    return 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -99,9 +105,10 @@ def new_pass():
     form = PassForm()
     if form.validate_on_submit():
         flash('Your Password has been added!', 'success')
-        passwordb = form.password.data
-        passwordb = ''.join(format(ord(i), 'b') for i in passwordb)
-        data = Password(site=form.site.data, username=form.username.data, password=passwordb, user_id = current_user.id)
+        image_file = form.password.data
+        random_hex = secrets.token_hex(8)
+        picture_file = plot(image_file,random_hex)
+        data = Password(site=form.site.data, username=form.username.data, password=form.password.data, user_id = current_user.id, image_file = picture_file )
         db.session.add(data)
         db.session.commit()
         return redirect(url_for('home'))
