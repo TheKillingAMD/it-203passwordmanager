@@ -10,7 +10,7 @@ def divide_chunks(l, n):
     for i in range(0, len(l), n):  
         yield l[i:i + n] 
 
-string = "ayush123"
+string = "Ayush123@"
 res = ''.join(format(ord(i), 'b') for i in string) 
 res = res.zfill(100)
 res = list(res)

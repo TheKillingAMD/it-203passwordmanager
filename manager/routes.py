@@ -39,9 +39,9 @@ def plot(string, random_hex):
 @app.route("/home")
 def home():
     if current_user.is_authenticated:
-        datas = Password.query.filter_by(user_id = current_user.id).first()
-        image_file = datas.image_file + '.png'
-        return render_template("home.html", datas=datas, image_file=image_file)
+        datas = Password.query.filter_by(user_id = current_user.id).all()
+        # image_file = datas.image_file + '.png'
+        return render_template("home.html", datas=datas)
     else:
         return redirect(url_for('login'))
 

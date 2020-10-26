@@ -1,13 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
+  {% for data in datas %}
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ datas.site }}</a>
+              <a class="mr-2" href="#">{{ data.site }}</a>
             </div>
-            <h2><a class="article-title" href="#">{{ datas.susername }}</a></h2>
-            <p class="article-content">{{ datas.password }}</p>
-            <img class="article-img" src="{{ image_file }}" />
+            <h2><a class="article-title" href="#">{{ data.username }}</a></h2>
+            <p class="article-content">{{ data.password }}</p>
           </div>
         </article>
+        {% endfor %}
 {% endblock content %}
