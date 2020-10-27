@@ -29,4 +29,4 @@ class Password(db.Model):
     users = db.relationship(User)
     
     def __repr__(self):
-        return f"Password('{self.site}','{self.username}','{self.image_file})"
+        return f"Password('{self.id}','{self.site}','{self.username}','{self.image_file})"

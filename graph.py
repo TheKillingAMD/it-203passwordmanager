@@ -3,6 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import secrets
 import os
+import sys
 
 def divide_chunks(l, n): 
       
@@ -19,4 +20,7 @@ res = np.matrix(res)
 G = nx.from_numpy_matrix(res)
 fig = nx.draw(G)
 random_hex = secrets.token_hex(8)
-plt.savefig(random_hex, dpi = 75)
+# plt.savefig(random_hex, dpi = 75)
+
+for p in sys.path:
+    print(p)

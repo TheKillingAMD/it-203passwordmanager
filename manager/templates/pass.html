@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2">{{ data.site }}</a>
+            </div>
+            <h2><a class="article-title">{{ data.username }}</a></h2>
+            <p class="article-content">{{ data.password }}</p>
+            <img scr="{{ url_for ( 'static' , filename='graph/{{data.image_url}}') }}">
+        </div>
+    </article>
+{% endblock content %}

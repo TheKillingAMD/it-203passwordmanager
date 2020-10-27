@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import secrets
 import matplotlib
 import os
+import shutil
+import sys
 matplotlib.use('Agg')
 
 def divide_chunks(l, n): 
@@ -40,14 +42,20 @@ def plot(string, random_hex):
 def home():
     if current_user.is_authenticated:
         datas = Password.query.filter_by(user_id = current_user.id).all()
-        # image_file = datas.image_file + '.png'
         return render_template("home.html", datas=datas)
     else:
         return redirect(url_for('login'))
 
-@app.route("/<int:image_id>")
-def image():
-    return 
+@app.route("/pass/<id>")
+def password(id):
+    if current_user.is_authenticated:
+        data = Password.query.filter_by(id=id).first()
+        print(data)
+        return render_template("pass.html", data=data)
+    else:
+        return redirect(url_for('login'))
+
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -107,7 +115,10 @@ def new_pass():
         flash('Your Password has been added!', 'success')
         image_file = form.password.data
         random_hex = secrets.token_hex(8)
-        picture_file = plot(image_file,random_hex)
+        picture_file = plot(image_file,random_hex) + ".png"
+        original = sys.path[0] + "/" + picture_file
+        target = sys.path[0] + "/manager/static/graph"
+        shutil.move(original,target)
         data = Password(site=form.site.data, username=form.username.data, password=form.password.data, user_id = current_user.id, image_file = picture_file )
         db.session.add(data)
         db.session.commit()
