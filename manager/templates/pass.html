@@ -7,7 +7,8 @@
             </div>
             <h2><a class="article-title">{{ data.username }}</a></h2>
             <p class="article-content">{{ data.password }}</p>
-            <img scr="{{ url_for ( 'static' , filename='graph/{{data.image_url}}') }}">
+            <p>{{ url_for ( 'static' , filename=data.image_file ) }}
+            <img scr='/static/graph/14c9e8c372ce8a5e.png'></p>
         </div>
     </article>
 {% endblock content %}

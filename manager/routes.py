@@ -119,7 +119,8 @@ def new_pass():
         original = sys.path[0] + "/" + picture_file
         target = sys.path[0] + "/manager/static/graph"
         shutil.move(original,target)
-        data = Password(site=form.site.data, username=form.username.data, password=form.password.data, user_id = current_user.id, image_file = picture_file )
+        image = "graph/" + picture_file
+        data = Password(site=form.site.data, username=form.username.data, password=form.password.data, user_id = current_user.id, image_file = image )
         db.session.add(data)
         db.session.commit()
         return redirect(url_for('home'))
