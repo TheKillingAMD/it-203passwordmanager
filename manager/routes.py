@@ -11,6 +11,7 @@ import matplotlib
 import os
 import shutil
 import sys
+import cloudinary as Cloud
 matplotlib.use('Agg')
 
 def divide_chunks(l, n): 
